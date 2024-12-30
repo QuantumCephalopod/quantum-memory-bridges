@@ -1,4 +1,4 @@
-// Core knowledge graph operations
+// Core knowledge graph operations with browser-compatible filesystem access
 
 export class KnowledgeGraphManager {
     constructor(filePath = 'memory.json') {
@@ -7,7 +7,7 @@ export class KnowledgeGraphManager {
 
     async loadGraph() {
         try {
-            const data = await fs.readFile(this.filePath, "utf-8");
+            const data = await window.fs.readFile(this.filePath, { encoding: 'utf8' });
             const lines = data.split("\n").filter(line => line.trim() !== "");
             return lines.reduce((graph, line) => {
                 const item = JSON.parse(line);
@@ -28,7 +28,7 @@ export class KnowledgeGraphManager {
             ...graph.entities.map(e => JSON.stringify({ type: "entity", ...e })),
             ...graph.relations.map(r => JSON.stringify({ type: "relation", ...r }))
         ];
-        await fs.writeFile(this.filePath, lines.join("\n"));
+        await window.fs.writeFile(this.filePath, lines.join("\n"));
     }
 
     async getEntityWithRelations(entityName) {
