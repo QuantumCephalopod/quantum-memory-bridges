@@ -7,7 +7,7 @@ export class KnowledgeGraphManager {
 
     async loadGraph() {
         try {
-            const data = await globalThis.fs.readFile(this.filePath, { encoding: 'utf8' });
+            const data = await fs.readFile(this.filePath, { encoding: 'utf8' });
             const lines = data.split("\n").filter(line => line.trim() !== "");
             return lines.reduce((graph, line) => {
                 const item = JSON.parse(line);
@@ -28,7 +28,7 @@ export class KnowledgeGraphManager {
             ...graph.entities.map(e => JSON.stringify({ type: "entity", ...e })),
             ...graph.relations.map(r => JSON.stringify({ type: "relation", ...r }))
         ];
-        await globalThis.fs.writeFile(this.filePath, lines.join("\n"));
+        await fs.writeFile(this.filePath, lines.join("\n"));
     }
 
     async getEntityWithRelations(entityName) {
